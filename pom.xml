@@ -20,15 +20,39 @@
 
     <groupId>de.iew.framework</groupId>
     <artifactId>iew-framework</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>iew-framework</name>
-    <url>http://maven.apache.org</url>
+    <url>https://github.com/ventilb/iew_framework</url>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>Refer to NOTICE for third party library license information.</comments>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>ms</id>
+            <name>Manuel Schulze</name>
+            <email>manuel_schulze@i-entwicklung.de</email>
+            <url>https://www.i-entwicklung.de</url>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+            <timezone>-6</timezone>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>3.1.2.RELEASE</spring.version>
+        <spring.version>[3.1.2.RELEASE,3.2.1.RELEASE]</spring.version>
+        <spring.security.version>3.1.2.RELEASE</spring.security.version>
         <spring.integration.version>2.2.1.RELEASE</spring.integration.version>
         <hibernate.version>4.1.7.Final</hibernate.version>
     </properties>
@@ -48,13 +72,13 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.1.1</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
         <!--
@@ -66,59 +90,59 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
             <version>${spring.version}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
             <version>${spring.version}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <!-- Damit wir Spring Beans in JUnit Tests verwenden können -->
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>${spring.version}</version>
-            <scope>provided</scope>
+            <version>${spring.security.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <!-- Damit wir den security: namespace in den XML-Dateien haben -->
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>${spring.version}</version>
-            <scope>provided</scope>
+            <version>${spring.security.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <!-- Für unsere DomainModel ACLs -->
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-acl</artifactId>
-            <version>${spring.version}</version>
-            <scope>provided</scope>
+            <version>${spring.security.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-taglibs</artifactId>
-            <version>${spring.version}</version>
-            <scope>provided</scope>
+            <version>${spring.security.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <!-- Zum Schützen der Webseiten und Webservices -->
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>${spring.version}</version>
-            <scope>provided</scope>
+            <version>3.1.2.RELEASE</version>
+            <scope>compile</scope>
         </dependency>
         <!--
         Spring Integration Unterstützung
@@ -127,20 +151,20 @@
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-core</artifactId>
             <version>${spring.integration.version}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-event</artifactId>
             <version>${spring.integration.version}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
         <!--
@@ -152,19 +176,19 @@
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>1.8.3</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
             <version>3.2.1</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
