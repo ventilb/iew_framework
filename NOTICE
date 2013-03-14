@@ -4,8 +4,18 @@
   This product includes or uses software developed by third party
   developers.
 
+* JUnit (https://github.com/junit-team/junit) is licensed under the
+  terms of the Common Public License - v 1.0.
+
 * The Spring Framework (http://www.springsource.org/) is licensed
   under the terms of the Apache 2.0 license.
+
+* The Simple Logging Facade for Java - SLF4J (http://www.slf4j.org/) is
+  licensed under the terms of the MIT license.
+
+* Log4j (http://logging.apache.org/log4j/1.2/) is licensed under the the
+  terms of the Apache 2.0 license.
+  Please refer to: http://logging.apache.org/log4j/1.2/license.html
 
 * Hibernate (http://www.hibernate.org/) is licensed under the terms of the
   GNU Lesser General Public License, Version 2.1.
@@ -14,3 +24,6 @@
 * The libraries released from the Apache Commons repository (http://commons.apache.org/)
   are licensed under the terms of the Apache 2.0 license.
   * commons-beanutils
+  * commons-lang
+  * commons-collections
+  * commons-logging
