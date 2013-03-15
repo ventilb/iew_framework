@@ -25,27 +25,6 @@
 
     <name>iew-framework</name>
     <url>https://github.com/ventilb/iew_framework</url>
-<distributionManagement>
-    <snapshotRepository>
-        <id>iew.snapshots</id>
-        <url>http://192.168.111.22:8080/repository/snapshots/</url>
-    </snapshotRepository>
-</distributionManagement>
-    <repositories>
-        <repository>
-            <id>iew.snapshots</id>
-            <name>iew Snapshot Repository</name>
-            <url>http://192.168.111.22:8080/repository/snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-
 
     <licenses>
         <license>
@@ -69,6 +48,27 @@
             <timezone>+1</timezone>
         </developer>
     </developers>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>iew.snapshots</id>
+            <url>http://repo.i-entwicklung.de/repository/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>iew.snapshots</id>
+            <name>iew Snapshot Repository</name>
+            <url>http://repo.i-entwicklung.de/repository/snapshots/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
