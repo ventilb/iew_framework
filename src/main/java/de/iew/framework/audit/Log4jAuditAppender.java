@@ -19,16 +19,23 @@ package de.iew.framework.audit;
 import de.iew.framework.domain.audit.Severity;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
-import org.apache.log4j.spi.LocationInfo;
+import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ApplicationContextEvent;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.ContextStartedEvent;
+import org.springframework.context.event.ContextStoppedEvent;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
 import org.springframework.integration.message.GenericMessage;
+import org.springframework.jmx.export.annotation.ManagedAttribute;
+import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.Assert;
 
 /**
  * Implements a Log4j appender to fire Log4j messages as audit events.
@@ -36,49 +43,81 @@ import org.springframework.util.Assert;
  * @author Manuel Schulze <manuel_schulze@i-entwicklung.de>
  * @since 02.02.13 - 21:51
  */
-public class Log4jAuditAppender extends AppenderSkeleton {
+@ManagedResource(objectName = "de.iew:name=Log4jAuditAppender", description = "Log4jAuditAppender to log important Log4j messages through the audit service.")
+public class Log4jAuditAppender extends AppenderSkeleton implements ApplicationListener<ApplicationContextEvent>, DisposableBean {
 
     /**
      * The constant DEFAULT_AUDIT_SERVICE_APPENDER_LOG4J_PRIORITY.
      */
     public static final Level DEFAULT_AUDIT_SERVICE_APPENDER_LOG4J_PRIORITY = Level.INFO;
 
-    private volatile transient MessageChannel auditEventChannel;
+    /**
+     * The name of the log4j appender logging level.
+     */
+    private Level appenderLog4jPriority = Log4jAuditAppender.DEFAULT_AUDIT_SERVICE_APPENDER_LOG4J_PRIORITY;
 
-    private Level auditServiceAppenderLog4jPriority = DEFAULT_AUDIT_SERVICE_APPENDER_LOG4J_PRIORITY;
+    public void destroy() throws Exception {
+        if (isLog4jConfiguredForAuditLogging()) {
+            Logger logger = Logger.getRootLogger();
+            logger.removeAppender(getName());
+        }
+    }
 
-    public Log4jAuditAppender(MessageChannel auditEventChannel) {
-        Assert.notNull(auditEventChannel);
-        this.auditEventChannel = auditEventChannel;
+    public synchronized void onApplicationEvent(ApplicationContextEvent contextStartedEvent) {
+        if (!isLog4jConfiguredForAuditLogging()
+                && (contextStartedEvent instanceof ContextStartedEvent
+                || contextStartedEvent instanceof ContextRefreshedEvent)) {
+            Logger logger = Logger.getRootLogger();
+
+            logger.addAppender(this);
+        } else if (isLog4jConfiguredForAuditLogging()
+                && contextStartedEvent instanceof ContextStoppedEvent) {
+            Logger logger = Logger.getRootLogger();
+            logger.removeAppender(getName());
+
+            this.applicationEventChannel = null;
+        }
+    }
+
+    /**
+     * Is Log4j configured for audit logging.
+     *
+     * @return the boolean
+     */
+    protected synchronized boolean isLog4jConfiguredForAuditLogging() {
+        Logger logger = Logger.getRootLogger();
+        return (logger.getAppender(getName()) != null);
     }
 
     @Override
     protected void append(LoggingEvent loggingEvent) {
-        if (loggingEvent.getLevel().isGreaterOrEqual(this.auditServiceAppenderLog4jPriority)) {
+        if (loggingEvent.getLevel().isGreaterOrEqual(this.appenderLog4jPriority)) {
             Severity severity = log4jLevelToSeverity(loggingEvent.getLevel());
             if (severity != null) {
-                log(loggingEvent.getLocationInformation(), loggingEvent.getTimeStamp(), getAuthentication(), severity, loggingEvent.getRenderedMessage(), loggingEvent.getThrowableInformation());
+                log(loggingEvent, getAuthentication(), severity);
             }
         }
     }
 
-    protected void log(LocationInfo locationInfo, long ts, Authentication auth, Severity severity, String msg, ThrowableInformation ti) {
+    protected void log(LoggingEvent loggingEvent, Authentication auth, Severity severity) {
         MessageChannel messageChannel;
 
         synchronized (this) {
-            messageChannel = this.auditEventChannel;
+            messageChannel = this.applicationEventChannel;
         }
 
         if (messageChannel != null) {
+            ThrowableInformation ti = loggingEvent.getThrowableInformation();
             Throwable t = null;
             if (ti != null) {
                 t = ti.getThrowable();
             }
 
-            String caller = locationInfo.fullInfo;
 
-            GenericAuditEvent event = new GenericAuditEvent(caller, ts, auth, severity, msg, t);
-            Message<GenericAuditEvent> eventMessage = new GenericMessage<GenericAuditEvent>(event);
+            String caller = loggingEvent.getLoggerName();
+
+            Log4jAuditEvent event = new Log4jAuditEvent(caller, loggingEvent.getTimeStamp(), auth, severity, loggingEvent.getRenderedMessage(), t);
+            Message<Log4jAuditEvent> eventMessage = new GenericMessage<Log4jAuditEvent>(event);
             messageChannel.send(eventMessage);
         }
     }
@@ -106,15 +145,29 @@ public class Log4jAuditAppender extends AppenderSkeleton {
         }
     }
 
-    public synchronized void close() {
-        this.auditEventChannel = null;
+    public void close() {
     }
 
     public boolean requiresLayout() {
         return false;
     }
 
-    public void setAuditServiceAppenderLog4jPriority(Level auditServiceAppenderLog4jPriority) {
-        this.auditServiceAppenderLog4jPriority = auditServiceAppenderLog4jPriority;
+    @ManagedAttribute(description = "The name of the log4j appender logging level.",
+            defaultValue = "WARN")
+    public void setAppenderLog4jPriority(String appenderLog4jPriority) {
+        this.appenderLog4jPriority = Level.toLevel(appenderLog4jPriority, Log4jAuditAppender.DEFAULT_AUDIT_SERVICE_APPENDER_LOG4J_PRIORITY);
+    }
+
+    @ManagedAttribute
+    public String getAppenderLog4jPriority() {
+        return this.appenderLog4jPriority.toString();
+    }
+
+    // Spring und Dao Abhängigkeiten
+
+    private MessageChannel applicationEventChannel;
+
+    public void setApplicationEventChannel(MessageChannel applicationEventChannel) {
+        this.applicationEventChannel = applicationEventChannel;
     }
 }

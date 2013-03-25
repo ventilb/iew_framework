@@ -17,6 +17,7 @@
 package de.iew.framework.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
@@ -30,7 +31,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "text_item_collection")
-public class TextItemCollection extends AbstractModel implements Iterable<TextItem> {
+public class TextItemCollection extends AbstractModel implements Iterable<TextItem>, Serializable {
 
     private Set<TextItem> textItems = new HashSet<TextItem>();
 

@@ -20,6 +20,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 
 /**
  * Basisklasse für Domainmodelle.
@@ -32,7 +33,7 @@ import javax.persistence.MappedSuperclass;
  * @since 17.11.12 - 10:12
  */
 @MappedSuperclass
-public abstract class AbstractModel implements DomainModel {
+public abstract class AbstractModel implements DomainModel, Serializable {
     private Long id;
 
     @Id

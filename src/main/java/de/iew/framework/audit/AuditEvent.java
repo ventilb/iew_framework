@@ -21,9 +21,6 @@ import org.springframework.security.core.Authentication;
 
 /**
  * Specifies an interface to declare application events as audit events.
- * <p>
- * Audit events will be intercepted by an {@link de.iew.services.AuditService}.
- * </p>
  *
  * @author Manuel Schulze <manuel_schulze@i-entwicklung.de>
  * @since 24.01.13 - 21:03

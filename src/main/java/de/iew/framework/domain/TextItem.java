@@ -20,6 +20,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * Beschreibt ein Domainmodell für die Verwaltung eines Textschnipsels.
@@ -34,7 +35,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "text_item")
-public class TextItem extends AbstractModel {
+public class TextItem extends AbstractModel implements Serializable {
 
     private String languageCode;
 

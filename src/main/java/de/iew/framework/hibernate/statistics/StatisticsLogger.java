@@ -21,7 +21,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.stat.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -36,12 +35,7 @@ public class StatisticsLogger {
 
     private static final Log log = LogFactory.getLog(StatisticsLogger.class);
 
-    @Scheduled(fixedDelay = 120000)
     public void logStatistics() {
-        if (log.isDebugEnabled()) {
-            log.debug("Blubb");
-        }
-
         Statistics statistics = this.sessionFactory.getStatistics();
         statistics.setStatisticsEnabled(true);
         StringBuilder sb = new StringBuilder("\nStatistics");

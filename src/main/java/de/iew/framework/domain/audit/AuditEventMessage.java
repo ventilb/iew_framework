@@ -19,6 +19,7 @@ package de.iew.framework.domain.audit;
 import de.iew.framework.domain.AbstractModel;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -29,7 +30,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "audit_event_message")
-public class AuditEventMessage extends AbstractModel {
+public class AuditEventMessage extends AbstractModel implements Serializable {
     private Date timestamp;
 
     private String principal;

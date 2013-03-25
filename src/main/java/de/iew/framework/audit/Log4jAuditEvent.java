@@ -17,20 +17,22 @@
 package de.iew.framework.audit;
 
 import de.iew.framework.domain.audit.Severity;
-import org.springframework.context.ApplicationEvent;
+import de.iew.framework.utils.IewApplicationEvent;
 import org.springframework.security.core.Authentication;
+
+import java.io.Serializable;
 
 /**
  * Extension of the spring {@link org.springframework.context.ApplicationEvent} class and provides an
  * implementation of the {@link AuditEvent} interface.
  * <p>
- * This event can be used to fire generic audit events.
+ * This event is used to fire Log4j messages through an application event mechanism.
  * </p>
  *
  * @author Manuel Schulze <manuel_schulze@i-entwicklung.de>
  * @since 02.02.13 - 23:04
  */
-public class GenericAuditEvent extends ApplicationEvent implements AuditEvent {
+public class Log4jAuditEvent extends IewApplicationEvent implements AuditEvent, Serializable {
 
     private long auditEventTimestamp;
 
@@ -42,12 +44,12 @@ public class GenericAuditEvent extends ApplicationEvent implements AuditEvent {
 
     private Throwable throwable;
 
-    public GenericAuditEvent(Object source, long auditEventTimestamp, Authentication authentication, Severity severity, String message) {
+    public Log4jAuditEvent(Object source, long auditEventTimestamp, Authentication authentication, Severity severity, String message) {
         this(source, auditEventTimestamp, authentication, severity, message, null);
     }
 
-    public GenericAuditEvent(Object source, long auditEventTimestamp, Authentication authentication, Severity severity, String message, Throwable throwable) {
-        super(source);
+    public Log4jAuditEvent(Object source, long auditEventTimestamp, Authentication authentication, Severity severity, String message, Throwable throwable) {
+        super(source, false);
         this.auditEventTimestamp = auditEventTimestamp;
         this.authentication = authentication;
         this.severity = severity;
