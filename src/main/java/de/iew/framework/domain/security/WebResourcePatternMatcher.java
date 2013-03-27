@@ -29,5 +29,5 @@ public enum WebResourcePatternMatcher {
     /**
      * Pattern matcher, der Ant-like URI-Ausdrücke versteht.
      */
-    ANT;
+    ANT
 }

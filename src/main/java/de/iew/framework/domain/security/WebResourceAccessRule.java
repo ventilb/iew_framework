@@ -243,7 +243,7 @@ public class WebResourceAccessRule extends AbstractModel {
         /**
          * The access rule is specified by a flag.
          */
-        FLAG;
+        FLAG
 
     }
 }
